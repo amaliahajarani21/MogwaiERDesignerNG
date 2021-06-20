@@ -605,10 +605,10 @@ public final class ERDesignerComponent implements ResourceHelperProvider {
 
         //-------------------- Modified --------------------
         DefaultAction theViewMode2DLogicalDiagramAction = new DefaultAction(
-                e -> setEditor2DDiagram(), this, "Halo");
+                e -> setEditor2DDiagram(), this, ERDesignerBundle.CONCEPTUALMODEL);
 
         DefaultAction theViewMode2DConceptualDiagramAction = new DefaultAction(
-                e -> setEditor2DDiagram(), this, "Hi");
+                e -> setEditor2DDiagram(), this, ERDesignerBundle.LOGICALMODEL);
         //-------------------- Modified --------------------
 
         viewMode2DDiagramMenuItem = new DefaultCheckboxMenuItem(
@@ -638,6 +638,7 @@ public final class ERDesignerComponent implements ResourceHelperProvider {
         theDisplayModeGroup.add(viewMode2DDiagramMenuItem);
         theDisplayModeGroup.add(viewMode2DInteractiveMenuItem);
         theDisplayModeGroup.add(viewMode3DInteractiveMenuItem);
+
         //-------------------- Modified --------------------
         theDisplayModeGroup.add(viewMode2DLogicalDiagramMenuItem);
         theDisplayModeGroup.add(viewMode2DConceptualDiagramMenuItem);

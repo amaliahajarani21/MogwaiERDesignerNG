@@ -1041,12 +1041,12 @@
             <Text lang="en">2D interactive mode</Text>
         </Entry>
         <Entry id="LOGICALMODEL">
-            <Text lang="en">2D logical diagram mode</Text>
             <Text lang="de">2D logical diagram modus</Text>
+            <Text lang="en">2D logical diagram mode</Text>
         </Entry>
         <Entry id="CONCEPTUALMODEL">
-            <Text lang="en">2D conceptual diagram mode</Text>
             <Text lang="de">2D conceptual diagram modus</Text>
+            <Text lang="en">2D conceptual diagram mode</Text>
         </Entry>
         <Entry id="VIEWMODE3DINTERACTIVE">
             <Text lang="de">3D Interaktiv Modus</Text>
