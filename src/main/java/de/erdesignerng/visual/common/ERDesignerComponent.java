@@ -138,6 +138,11 @@ public final class ERDesignerComponent implements ResourceHelperProvider {
     private DefaultCheckboxMenuItem viewMode2DInteractiveMenuItem;
     private DefaultCheckboxMenuItem viewMode3DInteractiveMenuItem;
 
+    //-------------------- Modified --------------------
+    private DefaultCheckboxMenuItem viewMode2DLogicalDiagramMenuItem;
+    private DefaultCheckboxMenuItem viewMode2DConceptualDiagramMenuItem;
+    //-------------------- Modified --------------------
+
     private ToolEnum currentTool = ToolEnum.HAND;
 
     private final DefaultAction editCustomTypes = new DefaultAction(
@@ -598,6 +603,13 @@ public final class ERDesignerComponent implements ResourceHelperProvider {
         DefaultAction theViewMode3DInteractiveAction = new DefaultAction(
                 e -> setEditor3DInteractive(), this, ERDesignerBundle.VIEWMODE3DINTERACTIVE);
 
+        //-------------------- Modified --------------------
+        DefaultAction theViewMode2DLogicalDiagramAction = new DefaultAction(
+                e -> setEditor2DDiagram(), this, "Halo");
+
+        DefaultAction theViewMode2DConceptualDiagramAction = new DefaultAction(
+                e -> setEditor2DDiagram(), this, "Hi");
+        //-------------------- Modified --------------------
 
         viewMode2DDiagramMenuItem = new DefaultCheckboxMenuItem(
                 theViewMode2DDiagramAction);
@@ -606,14 +618,30 @@ public final class ERDesignerComponent implements ResourceHelperProvider {
         viewMode3DInteractiveMenuItem = new DefaultCheckboxMenuItem(
                 theViewMode3DInteractiveAction);
 
+        //-------------------- Modified --------------------
+        viewMode2DLogicalDiagramMenuItem = new DefaultCheckboxMenuItem(
+                theViewMode2DLogicalDiagramAction);
+        viewMode2DConceptualDiagramMenuItem = new DefaultCheckboxMenuItem(
+                theViewMode2DConceptualDiagramAction);
+        //-------------------- Modified --------------------
+
         theViewModeMenu.add(viewMode2DDiagramMenuItem);
         theViewModeMenu.add(viewMode2DInteractiveMenuItem);
         theViewModeMenu.add(viewMode3DInteractiveMenuItem);
+
+        //-------------------- Modified --------------------
+        theViewModeMenu.add(viewMode2DLogicalDiagramMenuItem);
+        theViewModeMenu.add(viewMode2DConceptualDiagramMenuItem);
+        //-------------------- Modified -------------------
 
         ButtonGroup theDisplayModeGroup = new ButtonGroup();
         theDisplayModeGroup.add(viewMode2DDiagramMenuItem);
         theDisplayModeGroup.add(viewMode2DInteractiveMenuItem);
         theDisplayModeGroup.add(viewMode3DInteractiveMenuItem);
+        //-------------------- Modified --------------------
+        theDisplayModeGroup.add(viewMode2DLogicalDiagramMenuItem);
+        theDisplayModeGroup.add(viewMode2DConceptualDiagramMenuItem);
+        //-------------------- Modified --------------------
 
         viewMode2DInteractiveMenuItem.setSelected(true);
 
