@@ -24,6 +24,7 @@ import de.erdesignerng.util.ApplicationPreferences;
 import de.erdesignerng.util.ConnectionDescriptor;
 import de.erdesignerng.util.JasperUtils;
 import de.erdesignerng.visual.*;
+import de.erdesignerng.visual.ConceptualView.ConceptualEditor;
 import de.erdesignerng.visual.editor.BaseEditor;
 import de.erdesignerng.visual.editor.DialogConstants;
 import de.erdesignerng.visual.java2d.EditorPanel;
@@ -139,7 +140,6 @@ public final class ERDesignerComponent implements ResourceHelperProvider {
     private DefaultCheckboxMenuItem viewMode3DInteractiveMenuItem;
 
     //-------------------- Modified --------------------
-    private DefaultCheckboxMenuItem viewMode2DLogicalDiagramMenuItem;
     private DefaultCheckboxMenuItem viewMode2DConceptualDiagramMenuItem;
     //-------------------- Modified --------------------
 
@@ -187,6 +187,11 @@ public final class ERDesignerComponent implements ResourceHelperProvider {
                 break;
             case INTERACTIVE_3D:
                 theSuccess = setEditor3DInteractive();
+                break;
+
+            //-------------------- Modified --------------------
+            case CONCEPTUAL_2D:
+                theSuccess = setEditor2DConceptualDiagram();
                 break;
         }
 
@@ -277,6 +282,51 @@ public final class ERDesignerComponent implements ResourceHelperProvider {
             MessagesHelper.displayErrorMessage(getDetailComponent(), getResourceHelper().getText(ERDesignerBundle.NOSUPPORTEDOPENGLVENDOR), getResourceHelper().getText(ERDesignerBundle.ERRORINITIALIZING3DMODE));
             return false;
         }
+    }
+
+    //-------------------- Modified --------------------
+    protected  boolean setEditor2DConceptualDiagram() {
+        setEditor(new ConceptualEditor() {
+            @Override
+            protected void componentClicked(EditorPanel.EditorComponent aComponent, MouseEvent aEvent) {
+                if (!SwingUtilities.isRightMouseButton(aEvent)) {
+                    if (aEvent.getClickCount() == 1) {
+                        OutlineComponent.getDefault().setSelectedItem((ModelItem) aComponent.userObject);
+                    } else {
+                        ModelItem theItem = (ModelItem) aComponent.userObject;
+                        BaseEditor theEditor = EditorFactory.createEditorFor(theItem, editorPanel);
+                        if (theEditor.showModal() == DialogConstants.MODAL_RESULT_OK) {
+                            try {
+                                theEditor.applyValues();
+
+                                ERDesignerComponent.getDefault().updateSubjectAreasMenu();
+
+                                OutlineComponent.getDefault().refresh(ERDesignerComponent.getDefault().getModel());
+
+                                setSelectedObject(theItem);
+                            } catch (Exception e1) {
+                                ERDesignerComponent.getDefault().getWorldConnector().notifyAboutException(e1);
+                            }
+                        }
+                    }
+                } else {
+                    DefaultPopupMenu theMenu = new DefaultPopupMenu(ResourceHelper
+                            .getResourceHelper(ERDesignerBundle.BUNDLE_NAME));
+
+                    List<ModelItem> theItems = new ArrayList<>();
+                    theItems.add((ModelItem) aComponent.userObject);
+                    ContextMenuFactory.addActionsToMenu(this, theMenu, theItems);
+
+                    UIInitializer.getInstance().initialize(theMenu);
+
+                    theMenu.show(editorPanel, aEvent.getX(), aEvent.getY());
+                }
+            }
+        });
+        viewMode2DConceptualDiagramMenuItem.setSelected(true);
+        ApplicationPreferences.getInstance().setEditorMode(EditorMode.CONCEPTUAL_2D);
+
+        return true;
     }
 
     protected void setEditor(GenericModelEditor aEditor) {
@@ -604,11 +654,8 @@ public final class ERDesignerComponent implements ResourceHelperProvider {
                 e -> setEditor3DInteractive(), this, ERDesignerBundle.VIEWMODE3DINTERACTIVE);
 
         //-------------------- Modified --------------------
-        DefaultAction theViewMode2DLogicalDiagramAction = new DefaultAction(
-                e -> setEditor2DDiagram(), this, ERDesignerBundle.CONCEPTUALMODEL);
-
         DefaultAction theViewMode2DConceptualDiagramAction = new DefaultAction(
-                e -> setEditor2DDiagram(), this, ERDesignerBundle.LOGICALMODEL);
+                e -> setEditor2DConceptualDiagram(), this, ERDesignerBundle.CONCEPTUALMODEL);
         //-------------------- Modified --------------------
 
         viewMode2DDiagramMenuItem = new DefaultCheckboxMenuItem(
@@ -619,8 +666,6 @@ public final class ERDesignerComponent implements ResourceHelperProvider {
                 theViewMode3DInteractiveAction);
 
         //-------------------- Modified --------------------
-        viewMode2DLogicalDiagramMenuItem = new DefaultCheckboxMenuItem(
-                theViewMode2DLogicalDiagramAction);
         viewMode2DConceptualDiagramMenuItem = new DefaultCheckboxMenuItem(
                 theViewMode2DConceptualDiagramAction);
         //-------------------- Modified --------------------
@@ -630,7 +675,6 @@ public final class ERDesignerComponent implements ResourceHelperProvider {
         theViewModeMenu.add(viewMode3DInteractiveMenuItem);
 
         //-------------------- Modified --------------------
-        theViewModeMenu.add(viewMode2DLogicalDiagramMenuItem);
         theViewModeMenu.add(viewMode2DConceptualDiagramMenuItem);
         //-------------------- Modified -------------------
 
@@ -640,7 +684,6 @@ public final class ERDesignerComponent implements ResourceHelperProvider {
         theDisplayModeGroup.add(viewMode3DInteractiveMenuItem);
 
         //-------------------- Modified --------------------
-        theDisplayModeGroup.add(viewMode2DLogicalDiagramMenuItem);
         theDisplayModeGroup.add(viewMode2DConceptualDiagramMenuItem);
         //-------------------- Modified --------------------
 
